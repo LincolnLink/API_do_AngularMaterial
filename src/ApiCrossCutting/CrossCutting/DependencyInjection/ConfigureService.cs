@@ -19,6 +19,7 @@ namespace CrossCutting.DependencyInjection
 
             serviceCollection.AddTransient<IAnswerService, AnswerService>();
             serviceCollection.AddTransient<IQuestionsService, QuestionsService>();
+            serviceCollection.AddTransient<IChapterService, ChapterService>();
 
         }
     }

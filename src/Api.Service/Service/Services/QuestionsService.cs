@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Service.Services
 {
@@ -29,19 +30,34 @@ namespace Service.Services
             return await this._repository.SelectAsync(id);
         }
 
-        public async Task<IEnumerable<Questions>> GetAll()
+        public async Task<List<Questions>> GetAll()
         {
-            return await this._repository.SelectAcync();
+            return (List<Questions>)await this._repository.SelectAcync();
         }
 
         public async Task<Questions> Post(Questions q)
         {
+            List<Questions> indexValue = await GetAll();
+
+            int? indexValueInt = indexValue.Where(i => i.ChapterId == q.ChapterId).Count();
+
+            if(indexValueInt == null)
+            {
+                q.Index = 0;
+            }
+            else { q.Index = (int)indexValueInt; }
+
             return await this._repository.InsertAsync(q);
         }
 
         public async Task<Questions> Put(Questions q)
         {
             return await this._repository.UpdateAsync(q);
+        }
+
+        public async Task<List<Questions>> PutAll(Questions[] c)
+        {
+            return await this._repository.UpdateAllAsync(c.ToList());
         }
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -10,8 +11,9 @@ using Domain.Interface.Services;
 namespace Api.Application.Controllers
 {
 
-    [Route("api/[controller]")] //Define um roteamento
+    [EnableCors("Development")]
     [ApiController] //Define que é WebApi
+    [Route("api/[controller]")] //Define um roteamento
     public class AnswersController : ControllerBase
     {
 
@@ -23,12 +25,15 @@ namespace Api.Application.Controllers
 
         }
 
-        [Authorize("Bearer")]
+        [EnableCors("Development")]
         [HttpGet]
-        [EnableCors("CorsPolicy")]
-        public async Task<ActionResult> GetAll() //faz referencia do service
+        [Route("")]            
+        public async Task<ActionResult<List<Answer>>> Get() //faz referencia do service
         {
             //parametro removido: [FromServices] IUserService service
+
+            // Pegando o contexto, sem precisar ir na camada de Data e service!
+            //[FromServices] DataContext context
 
             //Verifica se a informação que está vindo da rota é valida!
             if (!ModelState.IsValid)
@@ -49,11 +54,10 @@ namespace Api.Application.Controllers
 
         }
 
-        //localhost:5000/api/users/id
-        [Authorize("Bearer")]
+        //localhost:5000/api/Answers/id
+        [EnableCors("Development")]
         [HttpGet]
-        [EnableCors("CorsPolicy")]
-        [Route("{id}", Name = "GetWithId")]
+        [Route("{id}", Name = "GetAnswer")]           
         public async Task<ActionResult> Get(Guid id)
         {
             //Verifica se a informação que está vindo da rota é valida!
@@ -74,10 +78,10 @@ namespace Api.Application.Controllers
 
         }
 
-        [Authorize("Bearer")]
+        [EnableCors("Development")]
         [HttpPost]
-        [EnableCors("CorsPolicy")]
-        public async Task<ActionResult> Post([FromBody] Answer user)
+        [Route("")]     
+        public async Task<ActionResult<Answer>> Post([FromBody] Answer a)
         {
             //Verifica se a informação que está vindo da rota é valida!
             if (!ModelState.IsValid)
@@ -87,10 +91,10 @@ namespace Api.Application.Controllers
 
             try
             {
-                var result = await _service.Post(user);
+                var result = await _service.Post(a);
                 if (result != null)
                 {
-                    return Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result);
+                    return Created(new Uri(Url.Link("GetAnswer", new { id = result.Id })), result);
                 }
                 else
                 {
@@ -104,10 +108,11 @@ namespace Api.Application.Controllers
             }
         }
 
-        [Authorize("Bearer")]
+        /*
+        [EnableCors("Development")]
         [HttpPut]
-        [EnableCors("CorsPolicy")]
-        public async Task<ActionResult> Put([FromBody] Answer user)
+        [Route("")]       
+        public async Task<ActionResult<Answer>> Put([FromBody] Answer a)
         {
             //Verifica se a informação que está vindo da rota é valida!
             if (!ModelState.IsValid)
@@ -117,7 +122,40 @@ namespace Api.Application.Controllers
 
             try
             {
-                var result = await _service.Put(user);
+                var result = await _service.Put(a);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (ArgumentException e)
+            {
+                //Resposta para o navegador! - erro 500
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+
+        }
+        */
+
+        [EnableCors("Development")]
+        [HttpPut]
+        [Route("")]
+        public async Task<ActionResult<List<Answer>>> Put([FromBody] Answer[] a)
+        {
+
+            //Verifica se a informação que está vindo da rota é valida!
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await _service.PutAll(a);
                 if (result != null)
                 {
                     return Ok(result);
@@ -135,9 +173,9 @@ namespace Api.Application.Controllers
 
         }
 
-        [Authorize("Bearer")]
+        [EnableCors("Development")]
         [HttpDelete("{id}")] //("{id}")
-        [EnableCors("CorsPolicy")]
+        [Route("{id}")]       
         public async Task<ActionResult> Delete(Guid id)
         {
             //Verifica se a informação que está vindo da rota é valida!

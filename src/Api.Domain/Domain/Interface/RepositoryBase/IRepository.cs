@@ -15,11 +15,13 @@ namespace Domain.Interface.RepositoryBase
 
         Task<T> UpdateAsync(T item);
 
+        Task<List<T>> UpdateAllAsync(List<T> item);
+
         Task<bool> DeleteAsync(Guid id);
 
         Task<T> SelectAsync(Guid id);
 
-        Task<IEnumerable<T>> SelectAcync();
+        Task<List<T>> SelectAcync();
 
         Task<bool> ExistAsync(Guid id);
     }

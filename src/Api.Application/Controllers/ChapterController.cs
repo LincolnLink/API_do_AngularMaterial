@@ -1,41 +1,40 @@
-
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
-using System.Net;
+using System.Linq;
 using System.Threading.Tasks;
-using Domain.Interface.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
+using Domain.Interface.Services;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Api.Application.Controllers
+namespace Application.Controllers
 {
 
     [EnableCors("Development")]
-    [ApiController] //Define que È WebApi
-    [Route("api/[controller]")] //Define um roteamento    
-    public class QuestionsController : ControllerBase
+    [ApiController]
+    [Route("api/[controller]")]    
+    public class ChapterController : ControllerBase
     {
+        private IChapterService _service;
 
-        private IQuestionsService _service;        
-
-        public QuestionsController(IQuestionsService service)
+        public ChapterController(IChapterService service)
         {
             this._service = service;
         }
 
+        
         [EnableCors("Development")]
         [HttpGet]
-        [Route("")] // [Authorize("Bearer")        
-        public async Task<ActionResult<List<Questions>>> Get() //faz referencia do service
-        {
-            //parametro removido: [FromServices] IUserService service
-
-            //Verifica se a informaÁ„o que est· vindo da rota È valida!
+        [Route("")]
+        public async Task<ActionResult<List<Chapter>>> Get() 
+        { 
+            //Verifica se a informa√ß√£o que est√° vindo da rota √© valida!
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); //400 bad request - solicitaÁ„o invalida!
+                return BadRequest(ModelState); //400 bad request - solicita√ß√£o invalida!
             }
 
             try
@@ -51,16 +50,19 @@ namespace Api.Application.Controllers
 
         }
 
-        //localhost:5000/api/users/id
+
+
+        //localhost:5000/api/Answers/id
+
         [EnableCors("Development")]
         [HttpGet]
-        [Route("{id}", Name = "GetWithId")]
-        public async Task<ActionResult<Questions>> Get(Guid id)
+        [Route("{id}", Name = "GetWithIdChapter")]
+        public async Task<ActionResult<Chapter>> Get(Guid id)
         {
-            //Verifica se a informaÁ„o que est· vindo da rota È valida!
+            //Verifica se a informa√ß√£o que est√° vindo da rota √© valida!
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); //400 bad request - solicitaÁ„o invalida!
+                return BadRequest(ModelState); //400 bad request - solicita√ß√£o invalida!
             }
 
             try
@@ -75,12 +77,14 @@ namespace Api.Application.Controllers
 
         }
 
+
+
         [EnableCors("Development")]
         [HttpPost]
-        [Route("")]   
-        public async Task<ActionResult<Questions>> Post([FromBody] Questions q)
+        [Route("")]      
+        public async Task<ActionResult<Chapter>> Post([FromBody] Chapter c)
         {
-            //Verifica se a informaÁ„o que est· vindo da rota È valida!
+            //Verifica se a informa√ß√£o que est√° vindo da rota √© valida!
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,10 +92,10 @@ namespace Api.Application.Controllers
 
             try
             {
-                var result = await _service.Post(q);
+                var result = await _service.Post(c);
                 if (result != null)
                 {
-                    return Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result);
+                    return Created(new Uri(Url.Link("GetWithIdChapter", new { id = result.Id })), result);
                 }
                 else
                 {
@@ -108,10 +112,10 @@ namespace Api.Application.Controllers
         /*
         [EnableCors("Development")]
         [HttpPut]
-        [Route("")]     
-        public async Task<ActionResult<Questions>> Put([FromBody] Questions q)
+        [Route("")]        
+        public async Task<ActionResult<Chapter>> Put([FromBody] Chapter c)
         {
-            //Verifica se a informaÁ„o que est· vindo da rota È valida!
+            //Verifica se a informa√ß√£o que est√° vindo da rota √© valida!
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -119,7 +123,7 @@ namespace Api.Application.Controllers
 
             try
             {
-                var result = await _service.Put(q);
+                var result = await _service.Put(c);
                 if (result != null)
                 {
                     return Ok(result);
@@ -139,12 +143,12 @@ namespace Api.Application.Controllers
         */
 
         [EnableCors("Development")]
-        [HttpPut]
-        [Route("")]
-        public async Task<ActionResult<List<Questions>>> Put([FromBody] Questions[] q)
+        [HttpPut]        
+        [Route("")]              
+        public async Task<ActionResult<List<Chapter>>> Put([FromBody] Chapter[] c)
         {
-
-            //Verifica se a informaÁ„o que est· vindo da rota È valida!
+                        
+            //Verifica se a informa√ß√£o que est√° vindo da rota √© valida!
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -152,7 +156,7 @@ namespace Api.Application.Controllers
 
             try
             {
-                var result = await _service.PutAll(q);
+                var result = await _service.PutAll(c);
                 if (result != null)
                 {
                     return Ok(result);
@@ -170,12 +174,13 @@ namespace Api.Application.Controllers
 
         }
 
+
         [EnableCors("Development")]
-        [HttpDelete("{id}")] //("{id}")
-        [Route("{id}")]  
+        [HttpDelete("{id}")]
+        [Route("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            //Verifica se a informaÁ„o que est· vindo da rota È valida!
+            //Verifica se a informa√ß√£o que est√° vindo da rota √© valida!
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -198,7 +203,6 @@ namespace Api.Application.Controllers
                 //Resposta para o navegador! - erro 500
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
             }
-
         }
     }
 }

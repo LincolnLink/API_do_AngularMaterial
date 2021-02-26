@@ -9,11 +9,13 @@ namespace Domain.Interface.Services
     {
         Task<Questions> Get(Guid id);
 
-        Task<IEnumerable<Questions>> GetAll();
+        Task<List<Questions>> GetAll();
 
         Task<Questions> Post(Questions user);
 
         Task<Questions> Put(Questions user);
+
+        Task<List<Questions>> PutAll(Questions[] c);
 
         Task<bool> Delete(Guid id);
     }

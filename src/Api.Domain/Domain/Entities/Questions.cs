@@ -10,6 +10,12 @@ namespace Domain.Entities
 
         public string Text { get; set; }
 
-        public List<Answer> answers { get; set; }
+        public string TypeQuestions { get; set; }
+
+        public List<Answer> Answer { get; set; }       
+
+        public Chapter Chapter { get; set; }
+
+        public Guid? ChapterId { get; set; }
     }
 }

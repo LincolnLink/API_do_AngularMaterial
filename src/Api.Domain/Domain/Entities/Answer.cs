@@ -8,11 +8,11 @@ namespace Domain.Entities
     {
         public int Index { get; set; }
 
-        public string Text { get; set; }
-
-        public int QuestionsId { get; set; }
+        public string Text { get; set; }        
 
         public Questions Questions { get; set; }
+
+        public Guid? QuestionsId { get; set; }
 
     }
 }
