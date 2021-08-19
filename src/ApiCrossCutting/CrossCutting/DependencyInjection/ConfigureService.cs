@@ -1,4 +1,5 @@
 ﻿using Domain.Interface.Services;
+using Domain.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Services;
 
@@ -20,6 +21,7 @@ namespace CrossCutting.DependencyInjection
             serviceCollection.AddTransient<IAnswerService, AnswerService>();
             serviceCollection.AddTransient<IQuestionsService, QuestionsService>();
             serviceCollection.AddTransient<IChapterService, ChapterService>();
+            serviceCollection.AddTransient<IProductsService, ProductsService>();
 
         }
     }

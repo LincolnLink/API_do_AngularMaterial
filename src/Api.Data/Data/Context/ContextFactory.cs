@@ -11,7 +11,10 @@ namespace Data.Context
         public MyContext CreateDbContext(string[] args)
         {
             //SqlServer
-            var connectionString = "Server=.\\SQLEXPRESS2017;Database=dbApiAangular;User Id=sa;Password=root123";
+            var connectionString = "Server=(localdb)\\mssqllocaldb;Database=MinhaAPICore;Trusted_Connection=True;MultipleActiveResultSets=true";
+
+
+
             var optionsBuilder = new DbContextOptionsBuilder<MyContext>();
              
             optionsBuilder.UseSqlServer(connectionString);

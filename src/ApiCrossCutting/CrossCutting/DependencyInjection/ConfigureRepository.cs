@@ -21,7 +21,7 @@ namespace CrossCutting.DependencyInjection
             
 
            serviceCollection.AddDbContext<MyContext>(options => 
-           options.UseSqlServer("Server=.\\SQLEXPRESS2017;Database=dbApiAangular;User Id=sa;Password=root123"));
+           options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MinhaAPICore;Trusted_Connection=True;MultipleActiveResultSets=true"));
 
         }
     }

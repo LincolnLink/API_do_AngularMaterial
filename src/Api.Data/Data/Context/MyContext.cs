@@ -20,6 +20,8 @@ namespace Data.Context
 
         public DbSet<Chapter> Chapter { get; set; }
 
+        public DbSet<Product> Products { get; set; }
+
 
         public MyContext(DbContextOptions<MyContext> options) : base(options)
         {
@@ -30,8 +32,8 @@ namespace Data.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLoggerFactory(_logger)
-                          .EnableSensitiveDataLogging()
-                          .UseSqlServer("Server=.\\SQLEXPRESS2017;Database=dbApiAangular;User Id=sa;Password=root123");
+                          .EnableSensitiveDataLogging()                          
+            .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MinhaAPICore;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,6 +46,7 @@ namespace Data.Context
             modelBuilder.Entity<Questions>(new QuestionsMap().Configure);
             modelBuilder.Entity<Answer>(new AnswerMap().Configure);
             modelBuilder.Entity<Chapter>(new ChapterMap().Configure);
+            modelBuilder.Entity<Product>(new ProductsMap().Configure);
 
         }
 
